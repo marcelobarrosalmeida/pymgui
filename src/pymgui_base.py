@@ -74,8 +74,11 @@ class CColor(object):
         
         return ret
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
         return self.get_color() == other.get_color()
+    
+    def __ne__(self, other):
+        return self.get_color() != other.get_color()
 
     def __str__(self):
         return self.get_color()
@@ -91,8 +94,19 @@ class CComponent(object):
 #######################
 #Test area
 #######################
-c = CColor("#040a7681")
-print "Color: " + c.get_color()
+c = CColor("#040a7681") #some color
+cc = CColor("040A7681") #equals to c
+ccc = CColor("#040a76") #different, alpha ommited is equal to FF
+print "Colors:"
+print "     c: " + c.get_color()
+print "    cc: " + cc.get_color()
+print "   ccc: " + ccc.get_color()
+if c == cc:
+    print "'c' and 'cc' are equals"
+if c != ccc:
+    print "'cc' and 'ccc' are different"
 
 coord = CRect("1,002,-03,40")
-print "Rect: " + coord.get_coords()
+print
+print "Rect:"
+print "coords: " + coord.get_coords()
