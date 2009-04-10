@@ -1,29 +1,30 @@
 import re
 
-#######################
-# CRect: Rectangle data
-#######################
-class CRect(object):
-    def __init__(self, scoord):
+class PRect(object):
+    """ Provides controls over a rectangule
+    """
+    def __init__(self, scoord=(0,0,0,0)):
+        """ Creates a new rectangule given some coordinates in the format (0,0,0,0)
+            Fefault coords are (0, 0, 0, 0), using integer numbers and
+            negative coords are valid
+        """
         self.set_coords(scoord)
 
     def set_coords(self, scoord):
-        #######
-        # scoord format (top, left, bottom, right)
-        # default coords (0, 0, 0, 0) - integer numbers
-        # negative coords are valid
-        r = re.compile(u"\({0,1}(-{0,1}\d+)\s*,\s*(-{0,1}\d+)\s*,\s*(-{0,1}\d+)\s*,\s*(-{0,1}\d+)\){0,1}")
-        m = r.match(scoord)
-        if m:
-            self.rect = (int(m.group(1)), int(m.group(2)), int(m.group(3)), int(m.group(4)))
-        else:
-            self.rect = (0, 0, 0, 0)
+        """ Set a coordinate
+        """
+        self.coord = tuple(scoord)
 
     def get_coords(self):
-        return '(' + str(self.rect[0]) + ', ' + str(self.rect[1]) + ', ' + str(self.rect[2]) + ', ' + str(self.rect[3]) + ')'
+        """ Retrieve the current coords
+        """
+        return self.coord
+
+    def __getitem__(self,idx):
+        return self.coord[idx]
 
     def __str__(self):
-        return self.get_coords()
+        return str(self.get_coords())
 
     def __cmp__(self, other):
         return self.get_coords() == other.get_coords()
