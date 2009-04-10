@@ -3,3 +3,10 @@
 = Introduction =
 
 This class stores a rectangle data as top, left, bottom, right in pixels
+
+*Examples of use:*
+
+{{{
+r = CRect("1,02,-03,40")
+print r #will print (1,2,-3,40)
+}}}
