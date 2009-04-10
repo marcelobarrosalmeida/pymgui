@@ -1,0 +1,5 @@
+#summary CRect Class
+
+= Introduction =
+
+This class stores a rectangle data as top, left, bottom, right in pixels
