@@ -1,0 +1,18 @@
+#summary PRect Class
+
+= Introduction =
+
+This class stores a rectangle data as top, left, bottom, right in pixels
+
+*Examples of use:*
+
+{{{
+rectangle = PRect("1,02,-03,40")
+print rectangle #will print (1,2,-3,40)
+t = rectangle.top
+l = rectangle.left
+b = rectangle.bottom
+r = rectangle.right
+}}}
+
+As seen above, negative integer are valid. Float numbers are not.
