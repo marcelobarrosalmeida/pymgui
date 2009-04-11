@@ -7,6 +7,6 @@ PyMGUI is a Python S60 GUI implementation over Canvas object.
 
 = Classes =
 
-[CRect CRect]: Rectangle data Class
+[PRect PRect]: Rectangle data Class
 
-[CColor CColor]: Color Class
+[PColor PColor]: Color Class
