@@ -1,0 +1,16 @@
+#summary PColor Class
+
+= Introduction =
+
+This class stores a color data as red, green, blue, alpha on HTML format
+
+*Examples of use:*
+
+{{{
+color = PColor("#aabbccff")
+print color #will print #AABBCCFF
+r = color.red
+g = color.green
+b = color.blue
+a = color.alpha
+}}}
