@@ -36,62 +36,64 @@ class PRect(object):
 class PColor(object):
     """ Color representation with some operations
     """
-    def __init__(self, scolor):
+    def __init__(self, scolor=[0,0,0,255]):
         self.set_color(scolor)
 
     def set_color(self, scolor):
-        """ Use: #RRGGBBAA
-            default color: black (#000000ff)
+        """ Use: #RRGGBBAA or [R, G, B, A]
+            default color: black (#000000ff) (0, 0, 0, 255)
         """
-        r = re.compile(u"#{0,1}([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2}){0,1}", re.IGNORECASE)
-        m = r.match(scolor)
-        if m:
-            i = 3
-            self.red = int("0x" + m.group(1), 16)
-            self.green = int("0x" + m.group(2), 16)
-            self.blue = int("0x" + m.group(3), 16)
-            if m.group(4):
-                self.alpha = int("0x" + m.group(4), 16)
-            else:
-                self.alpha = 255
-        else:
-            self.set_string('#000000ff')
+        if isinstance(scolor, str):
+            """ #RRGGBBAA
+            """
+            regex = re.compile(u"#{0,1}([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2}){0,1}", re.IGNORECASE)
+            m = regex.match(scolor)
+            if m:
+                if m.group(4):
+                    alpha = int("0x" + m.group(4), 16)
+                else:
+                    alpha = 255
 
-    def get_color(self):
+                self.color = [int("0x" + m.group(1), 16), 
+                              int("0x" + m.group(2), 16),
+                              int("0x" + m.group(3), 16),
+                              alpha]
+            else:
+                self.color = [0,0,0,255]
+        elif isinstance(scolor, list):
+            """ [R, G, B, A]
+            """
+            b = true
+            for i in scolor:
+                if isinstance(i, int):
+                    if i < 0:
+                        b = false
+                else:
+                    b = false
+            if b:
+                self.color = scolor
+            else:
+                self.color = [0,0,0,255]
+        else:
+            self.color = [0,0,0,255]
+
+    def combine(self, other, percent):
+        for i in range(4):
+            self.color[i] = int(self.color[i] * (1 - percent) + 0.5) + int(other.color[i] * percent + 0.5)
+
+    def __str__(self):
         ret = "#"
-        
-        if self.red < 16:
-            ret += "0"
-        ret += "%X" % self.red
-        
-        if self.green < 16:
-            ret += "0"
-        ret += "%X" % self.green
-        
-        if self.blue < 16:
-            ret += "0"
-        ret += "%X" % self.blue
-        
-        if self.alpha < 16:
-            ret += "0"
-        ret += "%X" % self.alpha
-        
+        for i in range(4):
+            if self.color[i] < 16:
+                ret += "0"
+            ret += "%X" % self.color[i]
         return ret
 
     def __eq__(self, other):
-        return self.get_color() == other.get_color()
+        return self.color == other.color
     
     def __ne__(self, other):
-        return self.get_color() != other.get_color()
-
-    def __str__(self):
-        return self.get_color()
-
-    def combine(self, other, percent):
-        self.red   |= int(other.red   * percent)
-        self.green |= int(other.green * percent)
-        self.blue  |= int(other.blue  * percent)
-        self.alpha |= int(other.alpha * percent)
+        return self.color != other.color
 
 """ PComponent: Base class for all components
 """ 
@@ -104,6 +106,6 @@ class PComponent(object):
 """
 white = PColor("#ffffffff")
 c     = PColor("#550000ff")
-c.combine(white, 0.15)
-print c                     #772626FF
-
+c.combine(white, 0.8)
+print c
+print c.color
