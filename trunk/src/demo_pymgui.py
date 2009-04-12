@@ -2,6 +2,7 @@ from papp import papp
 from pwin import PWin
 from random import randint
 from plistbox import PListBox
+from ptrend import PTrend
 
 class MyPWin(PWin):
     def __init__(self,position):
@@ -14,8 +15,10 @@ w1 = MyPWin((0,0,50,50))
 w2 = MyPWin((50,50,100,100))
 
 items = ["A","B","C","D","E","F","G","H"]
-w3 = PListBox(position=(150,0,250,100),items=items)
+w3 = PTrend(position=(150,50,250,100))
 
-w4 = PListBox(position=(150,110,250,190),items=items)
+w4 = PTrend(position=(5,110,145,200))
+
+w5 = PListBox(position=(150,110,250,190),items=items)
 
 papp.run()
