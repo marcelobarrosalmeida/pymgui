@@ -18,10 +18,6 @@ class PApp(object):
         self.canvas_ctrl = Canvas(redraw_callback = self.redraw,event_callback = self.event,resize_callback = self.resize)
         self.size = sysinfo.display_pixels()
         self.canvas = graphics.Image.new(self.size)
-        #self.window_list = []
-        #self.active_win = None
-        #self.bind_list = {}
-        #self.background = None
         app.body = self.canvas_ctrl
         self.lock = e32.Ao_lock()
         app.exit_handler = lambda: self.lock.signal()
@@ -32,17 +28,22 @@ class PApp(object):
 
     def bind(self,win,key,funct):
         if funct is None:
-            if self.bind_list.has_key(win):
-                if self.bind_list[win].has_key(key):
-                    del self.bind_list[win][key]
+            try:
+                del self.bind_list[key][win]
+            except:
+                pass # forgive me, Zen of Python
         else:
-            if not self.bind_list.has_key(win):
-                self.bind_list[win] = {}
-            self.bind_list[win][key] = funct
-            self.canvas_ctrl(key,lambda: self.bind_manager(win,key))
+            if not self.bind_list.has_key(key):
+                self.bind_list[key] = {}
+            self.bind_list[key][win] = {'win':win,'cbk':funct}
+            self.canvas_ctrl.bind(key,lambda: self.bind_dispatch(key))
 
-    def bind_manager(self,win,key):
-        self.bind_list[win][key]()
+    def bind_dispatch(self,key):
+        for updt in self.bind_list[key].values():
+            updt['cbk']()
+            w=updt['win']
+            self.canvas.blit(w.get_canvas(),target=w.get_position(),source=((0,0),w.get_size()))
+        self.canvas_ctrl.blit(self.canvas)
         
     def add_window(self,win):
         self.window_list.append(win)
@@ -51,7 +52,7 @@ class PApp(object):
         if self.background:
             self.canvas.blit(self.background)
         for w in self.window_list:
-            self.canvas.blit(w.update_canvas(),target=w.position,source=((0,0),w.size))
+            self.canvas.blit(w.get_canvas(),target=w.get_position(),source=((0,0),w.get_size()))
         self.canvas_ctrl.blit(self.canvas)
 
     def event(self,ev):
