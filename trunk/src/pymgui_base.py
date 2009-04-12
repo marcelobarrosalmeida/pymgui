@@ -61,33 +61,16 @@ class PColor(object):
             else:
                 self.color = [0,0,0,255]
         elif isinstance(scolor, list):
-            """ [R, G, B, A]
-            """
-            b = true
-            for i in scolor:
-                if isinstance(i, int):
-                    if i < 0:
-                        b = false
-                else:
-                    b = false
-            if b:
-                self.color = scolor
-            else:
-                self.color = [0,0,0,255]
+            # [R, G, B, A]
+            self.color = [ max(0,int(c)) for c in scolor ]
         else:
             self.color = [0,0,0,255]
 
-    def combine(self, other, percent):
-        for i in range(4):
-            self.color[i] = int(self.color[i] * (1 - percent) + 0.5) + int(other.color[i] * percent + 0.5)
+    def combine(self, other, perc):
+        self.color = map(lambda a,b: int(a*(1-perc)+0.5) + int(b*perc+0.5), self.color, other.color)
 
     def __str__(self):
-        ret = "#"
-        for i in range(4):
-            if self.color[i] < 16:
-                ret += "0"
-            ret += "%X" % self.color[i]
-        return ret
+        return "#" + "".join([ "%02X" % c for c in self.color ])
 
     def __eq__(self, other):
         return self.color == other.color
