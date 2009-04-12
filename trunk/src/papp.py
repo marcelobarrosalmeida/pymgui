@@ -48,6 +48,10 @@ class PApp(object):
     def add_window(self,win):
         self.window_list.append(win)
 
+    def redraw_window(self,w):
+        self.canvas.blit(w.get_canvas(),target=w.get_position(),source=((0,0),w.get_size()))
+        self.canvas_ctrl.blit(self.canvas)
+        
     def redraw(self,rect=None):
         if self.background:
             self.canvas.blit(self.background)
