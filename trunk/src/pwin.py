@@ -23,5 +23,8 @@ class PWin(object):
     def get_canvas(self):
         self.update_canvas()
         return self.canvas
+
+    def redraw(self):
+        papp.redraw_window(self)
   
     
