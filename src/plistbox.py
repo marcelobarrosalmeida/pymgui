@@ -11,17 +11,17 @@ import graphics
 import key_codes
 from math import ceil, floor
 from papp import papp
-from pwin import PWin
+from pwidget import PWidget
 
 __all__ = [ "PListBox" ]
 
-class PListBox(PWin):
+class PListBox(PWidget):
     """ This classes creates a listbox with variable row size on canvas.
     """
     def __init__(self,**attrs):
         """ Creates a list box on canvas. Just fill the desired parameters attributes.
         """
-        PWin.__init__(self,attrs['position'])
+        PWidget.__init__(self,attrs['position'])
         self.check_default_values(attrs)
         self.set_binds(True)
 
