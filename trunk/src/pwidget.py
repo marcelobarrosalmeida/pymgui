@@ -1,12 +1,15 @@
 import graphics
 from papp import papp
 
-class PWin(object):
-    def __init__(self,position):
+__all__ = [ "PWidget" ]
+    
+class PWidget(object):
+    def __init__(self,position,menu=[]):
         self.abs_position = position
         self.size = (position[2]-position[0],position[3]-position[1])
         self.canvas = graphics.Image.new(self.size)
-        self.handle = papp.add_window(self)
+        papp.add_window(self)
+        self.menu = menu
 
     def bind(self,key,funct):
         papp.bind(self,key,funct)
@@ -25,16 +28,8 @@ class PWin(object):
         return self.canvas
 
     def redraw(self):
-        papp.redraw_window(self)
+        papp.redraw(self)
+
+    def got_focus(self):
+        papp.set_menu(self.menu)
         
-    def draw_focus(self):
-        pass
-    
-    def clear_focus(self):
-        pass
-
-    def set_focus(self):
-        papp.set_focus(self.handle)
-
-    def release_focus(self, direction=0):
-        papp.release_focus(self.handle, direction)

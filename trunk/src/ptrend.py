@@ -5,12 +5,12 @@
 
 import e32
 from papp import papp
-from pwin import PWin
+from pwidget import PWidget
 from random import randint
 
 __all__ = [ "PTrend" ]
 
-class PTrend(PWin):
+class PTrend(PWidget):
 
     BLACK = (0,0,0)
     DARK_GREEN = (0,102,0)
@@ -19,13 +19,31 @@ class PTrend(PWin):
 
     def __init__(self,**attrs):
         self.check_default_values(attrs)
-        PWin.__init__(self,attrs['position'])
+        self.menu = [(u"Start",self.start),
+                     (u"Stop",self.stop)]
+        PWidget.__init__(self,attrs['position'],self.menu)
         self.samples = []
+        self.sampling = False
         self.timer = e32.Ao_timer()
         self.canvas.clear( self.BLACK )
         self.draw_grid()
-        self.timer.after(self.attrs['sampling_time'],self.sampler)
 
+    def start(self):
+        if not self.sampling:
+            self.timer.after(self.attrs['sampling_time'],self.sampler)
+            self.sampling = True
+
+    def stop(self):
+        if self.sampling:
+            self.sampling = False
+            
+    def sampler(self):
+        if self.sampling:
+            b = self.attrs['sampler']()
+            self.samples.insert( 0, b )
+            self.redraw()
+            self.timer.after(self.attrs['sampling_time'],self.sampler)
+        
     def default_sampler(self):
         return randint(0,100)
         
@@ -50,12 +68,6 @@ class PTrend(PWin):
                          0,
                          self.attrs['position'][2] - self.attrs['position'][0],
                          self.attrs['position'][3] - self.attrs['position'][1])
-               
-    def sampler(self):
-        b = self.attrs['sampler']()
-        self.samples.insert( 0, b )
-        self.redraw()
-        self.timer.after(self.attrs['sampling_time'],self.sampler)
         
     def draw_grid(self):
         w,h = self.size
